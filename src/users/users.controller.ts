@@ -1,7 +1,7 @@
 import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './Dtos/create-user.dto';
-import { LoginUserDto } from './Dtos/login-user.dto'; 
+import { CreateUserDto } from './dtos/create-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto'; 
 import * as bcrypt from 'bcrypt';
 
 @Controller('users')

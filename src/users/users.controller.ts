@@ -1,7 +1,15 @@
-import { Controller, Post, Body, BadRequestException, InternalServerErrorException, NotFoundException, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  BadRequestException,
+  InternalServerErrorException,
+  NotFoundException,
+  Patch,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { LoginUserDto } from './dtos/login-user.dto'; 
+import { LoginUserDto } from './dtos/login-user.dto';
 import { randomInt } from 'crypto';
 import * as bcrypt from 'bcrypt';
 
@@ -24,7 +32,8 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) { // Usa el DTO para login
+  async login(@Body() loginUserDto: LoginUserDto) {
+    // Usa el DTO para login
     const { username, password } = loginUserDto;
     const user = await this.usersService.findByUsername(username);
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -34,25 +43,31 @@ export class UsersController {
   }
 
   @Patch('forgot-password')
-async forgotPassword(@Body() body: { email: string; newPassword: string; confirmPassword: string }) {
-  const { email, newPassword, confirmPassword } = body;
+  async forgotPassword(
+    @Body()
+    body: {
+      email: string;
+      newPassword: string;
+      confirmPassword: string;
+    },
+  ) {
+    const { email, newPassword, confirmPassword } = body;
 
-  // Verificar si el correo existe
-  const user = await this.usersService.findByEmail(email);
-  if (!user) {
-    throw new BadRequestException('Email not found');
+    // Verificar si el correo existe
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Email not found');
+    }
+
+    // Verificar si las contraseñas coinciden
+    if (newPassword !== confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    // Cambiar la contraseña del usuario
+    const hashedPassword = await bcrypt.hash(newPassword, 20);
+    await this.usersService.updatePassword(user.email, hashedPassword);
+
+    return { message: 'Password updated successfully' };
   }
-
-  // Verificar si las contraseñas coinciden
-  if (newPassword !== confirmPassword) {
-    throw new BadRequestException('Passwords do not match');
-  }
-
-  // Cambiar la contraseña del usuario
-  const hashedPassword = await bcrypt.hash(newPassword, 20);
-  await this.usersService.updatePassword(user.email, hashedPassword);
-  
-  return { message: 'Password updated successfully' };
-}
-
 }

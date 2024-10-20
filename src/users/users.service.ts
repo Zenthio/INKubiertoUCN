@@ -23,7 +23,7 @@ export class UsersService {
     });
   }
 
-  async findByEmail(email: string){
+  async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
     });
@@ -35,5 +35,4 @@ export class UsersService {
       data: { password: newPassword }, // Asegúrate de que aquí se esté guardando el hash
     });
   }
-
 }

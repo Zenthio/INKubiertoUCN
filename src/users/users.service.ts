@@ -23,11 +23,7 @@ export class UsersService {
     });
   }
 
-<<<<<<< HEAD
   async findByEmail(email: string){
-=======
-  async findByEmail(email: string) {
->>>>>>> 53eaf4a6a17cf3f21a4c9455c1faf51cdf9922f3
     return this.prisma.user.findUnique({
       where: { email },
     });
@@ -36,15 +32,9 @@ export class UsersService {
   async updatePassword(email: string, newPassword: string) {
     return this.prisma.user.update({
       where: { email },
-<<<<<<< HEAD
       data: { password: newPassword },
     });
   }
 
 }
-=======
-      data: { password: newPassword }, // Asegúrate de que aquí se esté guardando el hash
-    });
-  }
-}
->>>>>>> 53eaf4a6a17cf3f21a4c9455c1faf51cdf9922f3
+

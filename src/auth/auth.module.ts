@@ -9,7 +9,7 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), // Importar ConfigModule para acceder a las variables de entorno
+    ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({
@@ -17,7 +17,7 @@ import { AuthController } from './auth.controller';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' }, // Configurar la duración del token
+        signOptions: { expiresIn: '1h' },
       }),
     }),
   ],

@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+<<<<<<< HEAD
   
   // Habilitar la validación global
   app.useGlobalPipes(new ValidationPipe({
@@ -20,3 +21,17 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+=======
+
+  // Habilitar la validación global
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true, // Transforma el cuerpo a la clase DTO
+      whitelist: true, // Elimina propiedades no especificadas en el DTO
+    }),
+  );
+
+  await app.listen(3000);
+}
+bootstrap();
+>>>>>>> 53eaf4a6a17cf3f21a4c9455c1faf51cdf9922f3

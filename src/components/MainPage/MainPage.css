@@ -1,0 +1,31 @@
+body{
+    margin:0px;
+    background-color:whitesmoke;
+}
+.cardContainer{
+    height: 250px;
+    width: 250px;
+    background: '#626262';
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding-left:10px;
+    position: relative;
+    overflow: hidden;
+    justify-content: center;
+
+    
+}
+.caredName{
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    font-family: Arial;
+}
+.cardValue{
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+
+}

@@ -1,0 +1,175 @@
+/* src/components/MainPage/RegisterPage.css */
+
+/* Contenedor principal para centrar el formulario */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Fondo suave y agradable */
+}
+
+/* Contenedor del formulario */
+.auth-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 3rem 2.5rem;
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover en el contenedor */
+.auth-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo de títulos y textos */
+.auth-form h2 {
+  color: #333333;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.auth-form p {
+  color: #555555;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* Estilo de los campos de entrada */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333333;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #007BFF;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+/* Estilo del botón de autenticación (login/register) */
+.auth-button {
+  background-color: #28a745; /* Color verde para Register */
+  color: #ffffff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #218838;
+  transform: scale(1.02);
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+/* Estilo del enlace de autenticación */
+.auth-link {
+  margin-top: 2rem;
+  font-size: 1rem;
+}
+
+.auth-link a {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.auth-link a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Estilos para mensajes de error */
+.error {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Estilos de los botones sociales (opcional) */
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.social-button {
+  background-color: #f4f4f4;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #555555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.social-button:hover {
+  background-color: #e4e4e4;
+  transform: scale(1.05);
+}
+
+.social-button:active {
+  transform: scale(0.95);
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 480px) {
+  .auth-container {
+      padding: 2rem 1.5rem;
+      width: 90%;
+  }
+
+  .auth-form h2 {
+      font-size: 1.5rem;
+  }
+
+  .auth-form p {
+      font-size: 0.9rem;
+  }
+
+  .form-group input {
+      padding: 0.6rem 0.8rem;
+  }
+
+  .auth-button {
+      padding: 0.6rem;
+      font-size: 0.9rem;
+  }
+}

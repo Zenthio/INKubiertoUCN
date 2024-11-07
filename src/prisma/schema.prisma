@@ -20,3 +20,49 @@ model User{
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+model Venta{
+  id           Int      @id
+  fecha        DateTime
+  creacion     DateTime
+  cerrada      DateTime
+  caja         String
+  estado       String
+  mesa         Int
+  sala         String
+  camarero     String
+  medioPago    String
+  total        Float
+  tipoVenta    String     
+  adiciones  Adicion[] @relation("VentaAdiciones") 
+  pagos      Pago[]    @relation("VentaPagos")
+}
+
+model Adicion{
+  id           Int      @id @default(autoincrement())
+  idVenta      Int      
+  fechaPago    DateTime
+  producto     String
+  categoria    String
+  cantidad     Int
+  precio       Int
+  costoBase    Int
+  costoModif   Int
+  costoTot     Int
+  creadoPor    String
+  cocina       String
+  cancelada    String
+  venta        Venta   @relation("VentaAdiciones", fields: [idVenta], references: [id])
+}
+
+model Pago{
+  id           Int      @id
+  fecha        DateTime
+  medioPago    String
+  monto        Int
+  caja         String
+  sala         String
+  mesa         Int
+  cancelado    String
+  venta        Venta     @relation("VentaPagos", fields: [id], references: [id])
+}

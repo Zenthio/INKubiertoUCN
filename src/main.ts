@@ -10,7 +10,7 @@ async function bootstrap() {
     whitelist: true, 
   }));
   app.enableCors({
-    origin: '*', 
+    origin: 'http://localhost:3001', 
     credentials: true,
   });
 

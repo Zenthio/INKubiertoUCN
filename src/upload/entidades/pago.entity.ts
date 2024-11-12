@@ -7,6 +7,9 @@ export class Pago {
   id: number;
 
   @Column()
+  idP: number;
+
+  @Column()
   fecha: Date;
 
   @Column()
@@ -26,7 +29,4 @@ export class Pago {
 
   @Column()
   cancelado: string;
-
-  @ManyToOne(() => Venta, venta => venta.pagos)
-  venta: Venta;
 }

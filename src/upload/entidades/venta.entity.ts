@@ -43,6 +43,4 @@ export class Venta {
   @OneToMany(() => Adicion, adicion => adicion.venta)
   adiciones: Adicion[];
 
-  @OneToMany(() => Pago, pago => pago.venta)
-  pagos: Pago[];
 }

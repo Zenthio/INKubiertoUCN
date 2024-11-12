@@ -4,7 +4,7 @@ import { CreateAdicionDto } from './create-adicion.dto';
 import { CreatePagoDto } from './create-pago.dto';
 export class CreateVentaDto {
   @IsInt()
-  id: number;
+  idV: number;
 
   @IsDate()
   @Type(() => Date)
@@ -46,7 +46,4 @@ export class CreateVentaDto {
   @Type(() => CreateAdicionDto)
   adiciones: CreateAdicionDto[];
 
-  @IsArray()
-  @Type(() => CreatePagoDto)
-  pagos: CreatePagoDto[];
 }

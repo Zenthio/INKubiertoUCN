@@ -3,7 +3,7 @@ import { IsDate, IsOptional, IsString, IsInt, IsNumber, IsBoolean } from 'class-
 
 export class CreateAdicionDto {
   @IsInt()
-  id?: number;
+  id: number;
 
   @IsInt()
   idVenta: number;

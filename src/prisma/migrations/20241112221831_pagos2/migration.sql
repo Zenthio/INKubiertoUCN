@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Pago" ALTER COLUMN "sala" DROP NOT NULL,
+ALTER COLUMN "mesa" DROP NOT NULL;

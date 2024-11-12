@@ -5,6 +5,9 @@ export class CreatePagoDto {
   @IsInt()
   id: number;
 
+  @IsInt()
+  idP: number;
+
   @IsDate()
   @Type(() => Date)
   fecha: Date;

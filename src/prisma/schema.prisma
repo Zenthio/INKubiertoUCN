@@ -22,20 +22,19 @@ model User{
 }
 
 model Venta{
-  id           Int      @id
+  idV           Int      @id
   fecha        DateTime
   creacion     DateTime
   cerrada      DateTime
   caja         String
   estado       String
-  mesa         Int
-  sala         String
-  camarero     String
-  medioPago    String
+  mesa         Int?
+  sala         String?
+  camarero     String?
+  medioPago    String?
   total        Float
   tipoVenta    String     
-  adiciones  Adicion[] @relation("VentaAdiciones") 
-  pagos      Pago[]    @relation("VentaPagos")
+  adiciones  Adicion[]  
 }
 
 model Adicion{
@@ -52,17 +51,25 @@ model Adicion{
   creadoPor    String
   cocina       String
   cancelada    String
-  venta        Venta   @relation("VentaAdiciones", fields: [idVenta], references: [id])
+  venta        Venta   @relation(fields: [idVenta], references: [idV])
 }
 
 model Pago{
-  id           Int      @id
+  id           Int      @id @default(autoincrement())
+  idP          Int      
   fecha        DateTime
   medioPago    String
   monto        Int
   caja         String
-  sala         String
-  mesa         Int
+  sala         String?
+  mesa         Int?
   cancelado    String
-  venta        Venta     @relation("VentaPagos", fields: [id], references: [id])
+}
+
+model Gasto{
+  id        Int      @id @default(autoincrement())
+  fecha     DateTime
+  giroMes   String
+  item      String
+  monto     Int
 }

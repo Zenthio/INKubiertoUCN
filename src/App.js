@@ -23,7 +23,6 @@ const App = () => {
 
         {/* Rutas con barra de tareas */}
         <Route path="/" element={<Layout />}>
-          <Route path='mainpage' element={<MainPage />} />
           <Route path="finance" element={<FinancePage />} />
           <Route path="graphics" element={<GraphicsPage />} />
           <Route path="inventory" element={<InventoryPage />} />

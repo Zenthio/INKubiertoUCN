@@ -24,12 +24,13 @@ const Login = () => {
         });
 
         const { data } = response;
+        
 
         if (data.message === "Inicio de sesión exitoso") {
            
             localStorage.setItem('authenticated', 'true');
             localStorage.setItem('email', email);
-            navigate('/mainpage');
+            navigate('/summary');
         } else {
             setError('Login failed');
         }

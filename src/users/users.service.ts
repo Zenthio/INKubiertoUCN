@@ -8,7 +8,7 @@ export class UsersService {
 
   async create(username: string, password: string, email: string) {
     const hashedPassword = await bcrypt.hash(password, 20);
-    return this.prisma.user.create({
+    return this.prisma.usuario.create({
       data: {
         username,
         password: hashedPassword,
@@ -18,19 +18,19 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
-    return this.prisma.user.findUnique({
+    return this.prisma.usuario.findUnique({
       where: { username },
     });
   }
 
   async findByEmail(email: string){
-    return this.prisma.user.findUnique({
+    return this.prisma.usuario.findUnique({
       where: { email },
     });
   }
 
   async updatePassword(email: string, newPassword: string) {
-    return this.prisma.user.update({
+    return this.prisma.usuario.update({
       where: { email },
       data: { password: newPassword },
     });

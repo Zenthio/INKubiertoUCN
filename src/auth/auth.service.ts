@@ -14,7 +14,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.usuario.findUnique({
       where: { email },
       select: { id: true, username: true, password: true },
     });
@@ -43,14 +43,14 @@ export class AuthService {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
 
-    const existingUser = await this.prisma.user.findUnique({
+    const existingUser = await this.prisma.usuario.findUnique({
       where: { email: createUserDto.email },
     });
     if (existingUser) {
       throw new ConflictException('El usuario ya existe');
     }
 
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.usuario.create({
       data: {
         username: createUserDto.username,
         email: createUserDto.email,

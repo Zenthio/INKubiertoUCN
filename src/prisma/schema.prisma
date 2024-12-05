@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,63 +7,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model adicion {
+  id         Int      @id @default(autoincrement())
+  idventa    Int
+  fechapago  DateTime @db.Timestamp(6)
+  producto   String   @db.VarChar(255)
+  categoria  String   @db.VarChar(255)
+  cantidad   Int
+  precio     Int
+  costobase  Int
+  costomodif Int
+  costotot   Int
+  creadopor  String   @db.VarChar(255)
+  cocina     String   @db.VarChar(255)
+  cancelada  String?  @db.VarChar(255)
+  activo     Boolean? @default(true)
+  venta      venta    @relation(fields: [idventa], references: [idv], onDelete: Cascade, onUpdate: NoAction, map: "fk_venta")
+}
+
+model gasto {
+  id         Int      @id @default(autoincrement())
+  fecha      DateTime @db.Timestamp(6)
+  giromes    String   @db.VarChar(255)
+  item       String   @db.VarChar(255)
+  monto      Int
+  archivoid  String   @db.VarChar(255)
+  fechacarga DateTime @db.Timestamp(6)
+  activo     Boolean? @default(true)
+}
+
+model pago {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  email     String   @unique
-  createdAt DateTime @default(now())
-}
-
-model Venta{
-  idV           Int      @id
-  fecha        DateTime
-  creacion     DateTime
-  cerrada      DateTime
-  caja         String
-  estado       String
-  mesa         Int?
-  sala         String?
-  camarero     String?
-  medioPago    String?
-  total        Float
-  tipoVenta    String     
-  adiciones  Adicion[]  
-}
-
-model Adicion{
-  id           Int      @id @default(autoincrement())
-  idVenta      Int      
-  fechaPago    DateTime
-  producto     String
-  categoria    String
-  cantidad     Int
-  precio       Int
-  costoBase    Int
-  costoModif   Int
-  costoTot     Int
-  creadoPor    String
-  cocina       String
-  cancelada    String
-  venta        Venta   @relation(fields: [idVenta], references: [idV])
-}
-
-model Pago{
-  id           Int      @id @default(autoincrement())
-  idP          Int      
-  fecha        DateTime
-  medioPago    String
-  monto        Int
-  caja         String
-  sala         String?
-  mesa         Int?
-  cancelado    String
-}
-
-model Gasto{
-  id        Int      @id @default(autoincrement())
-  fecha     DateTime
-  giroMes   String
-  item      String
+  idp       Int
+  fecha     DateTime @db.Timestamp(6)
+  mediopago String   @db.VarChar(255)
   monto     Int
+  caja      String   @db.VarChar(255)
+  sala      String?  @db.VarChar(255)
+  mesa      Int?
+  cancelado String?  @db.VarChar(255)
+  activo    Boolean? @default(true)
+}
+
+model usuario {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model venta {
+  idv        Int       @id @default(autoincrement())
+  fecha      DateTime  @db.Timestamp(6)
+  creacion   DateTime  @db.Timestamp(6)
+  cerrada    DateTime  @db.Timestamp(6)
+  caja       String    @db.VarChar(255)
+  estado     String    @db.VarChar(255)
+  mesa       Int?
+  sala       String?   @db.VarChar(255)
+  camarero   String?   @db.VarChar(255)
+  mediopago  String?   @db.VarChar(255)
+  total      Float     @db.Real
+  tipoventa  String    @db.VarChar(255)
+  archivoid  String    @db.VarChar(255)
+  fechacarga DateTime  @db.Timestamp(6)
+  activo     Boolean?  @default(true)
+  adicion    adicion[]
 }

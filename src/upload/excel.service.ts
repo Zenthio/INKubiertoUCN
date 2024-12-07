@@ -14,29 +14,13 @@ export class ExcelService {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(fileBuffer);
   
-    const archivoId = uuidv4(); // Generar un identificador único para esta carga
-    const fechaCarga = new Date(); // Fecha actual
-  
-    // Verificar si este archivo ya ha sido procesado
-    const archivoExistente = await this.prisma.venta.findFirst({
-      where: { archivoid: archivoId },
-    });
-  
-    if (archivoExistente) {
-      console.log(`El archivo con ID ${archivoId} ya fue procesado.`);
-      return; // No procesamos el archivo nuevamente
-    }
+
   
     // Procesar el archivo y cargar los datos
     const ventasSheet = workbook.worksheets[0];
     const adicionSheet = workbook.worksheets[1];
     const pagosSheet = workbook.worksheets[3];
   
-    // Marcar los registros existentes como archivados
-    await this.prisma.venta.updateMany({
-      where: { activo: true }, // Sólo si son activos
-      data: { activo: false }, // Los desactivamos
-    });
 
     // Leer y verificar las ventas
     for (let rowNumber = 5; rowNumber <= ventasSheet.rowCount; rowNumber++) {
@@ -66,9 +50,6 @@ export class ExcelService {
           mediopago: row.getCell(10).value ? (row.getCell(10).value as string) : null,
           total: Number(row.getCell(11).value),
           tipoventa: row.getCell(12).value as string,
-          archivoid: archivoId,
-          fechacarga: fechaCarga,
-          activo: true
           
         };
         
@@ -101,7 +82,6 @@ export class ExcelService {
       creadopor: rowA.getCell(10).value as string,
       cocina: rowA.getCell(11).value as string,
       cancelada: rowA.getCell(12).value as string,
-      activo: true
     };
     await this.prisma.adicion.create({
       data: adicion,
@@ -122,7 +102,6 @@ export class ExcelService {
     sala: rowP.getCell(9).value ? (rowP.getCell(9).value as string) : null,
     mesa: rowP.getCell(10).value ? (rowP.getCell(10).value as number) : null,
     cancelado: rowP.getCell(11).value as string,
-    activo: true
   };
   await this.prisma.pago.create({
     data: pago,
@@ -133,19 +112,8 @@ export class ExcelService {
 async readExcelFileP(fileBuffer: Buffer): Promise<void> {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(fileBuffer);
-  const archivoId = uuidv4(); // Generar un identificador único para esta carga
-  const fechaCarga = new Date(); // Fecha actual
   const gastosSheet = workbook.worksheets[0];
 
-  // Verificar si este archivo ya ha sido procesado (opcional)
-  const archivoExistente = await this.prisma.gasto.findFirst({
-    where: { archivoid: archivoId },
-  });
-
-  if (archivoExistente) {
-    console.log(`El archivo con ID ${archivoId} ya fue procesado.`);
-    return; // No procesamos el archivo nuevamente
-  }
 
   // **Eliminar los registros anteriores de la tabla de gastos**
   await this.prisma.gasto.deleteMany({
@@ -163,9 +131,6 @@ async readExcelFileP(fileBuffer: Buffer): Promise<void> {
       giromes: rowG.getCell(3).value as string,
       item: rowG.getCell(4).value as string,
       monto: Number(rowG.getCell(5).value),
-      archivoid: archivoId,
-      fechacarga: fechaCarga,
-      activo: true,
     };
 
     await this.prisma.gasto.create({

@@ -21,7 +21,6 @@ model adicion {
   creadopor  String   @db.VarChar(255)
   cocina     String   @db.VarChar(255)
   cancelada  String?  @db.VarChar(255)
-  activo     Boolean? @default(true)
   venta      venta    @relation(fields: [idventa], references: [idv], onDelete: Cascade, onUpdate: NoAction, map: "fk_venta")
 }
 
@@ -31,9 +30,6 @@ model gasto {
   giromes    String   @db.VarChar(255)
   item       String   @db.VarChar(255)
   monto      Int
-  archivoid  String   @db.VarChar(255)
-  fechacarga DateTime @db.Timestamp(6)
-  activo     Boolean? @default(true)
 }
 
 model pago {
@@ -46,7 +42,6 @@ model pago {
   sala      String?  @db.VarChar(255)
   mesa      Int?
   cancelado String?  @db.VarChar(255)
-  activo    Boolean? @default(true)
 }
 
 model usuario {
@@ -70,8 +65,5 @@ model venta {
   mediopago  String?   @db.VarChar(255)
   total      Float     @db.Real
   tipoventa  String    @db.VarChar(255)
-  archivoid  String    @db.VarChar(255)
-  fechacarga DateTime  @db.Timestamp(6)
-  activo     Boolean?  @default(true)
   adicion    adicion[]
 }

@@ -18,29 +18,29 @@ const Login = () => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:3000/auth/login', {
-                email: email,
-                password: password,
-        });
+            const response = await axios.post('http://localhost:3001/auth/login', {
+                email,
+                password,
+            });
 
-        const { data } = response;
-        
+            // Obtener el token de la respuesta
+            const { token, message } = response.data;
 
-        if (data.message === "Inicio de sesión exitoso") {
-           
-            localStorage.setItem('authenticated', 'true');
-            localStorage.setItem('email', email);
-            navigate('/summary');
-        } else {
-            setError('Login failed');
+            if (message === 'Inicio de sesión exitoso') {
+                // Guardar el token en localStorage para mantener la sesión
+                localStorage.setItem('token', token);
+                localStorage.setItem('email', email);
+                navigate('/finance'); // Redirigir al home después del login exitoso
+            } else {
+                setError('Credenciales inválidas');
+            }
+        } catch (error) {
+            console.error('Error al conectar con el servidor:', error);
+            setError(error.response?.data?.message || 'Error al conectar con el servidor');
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error('Error al conectar con el servidor:', error);
-        setError('Error al conectar con el servidor');
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     return (
         <div className="auth-page">
@@ -74,9 +74,6 @@ const Login = () => {
                         {loading ? 'Cargando...' : 'Iniciar Sesión'}
                     </button>
                 </form>
-                <div className="auth-link">
-                    ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
-                </div>
             </div>
         </div>
     );

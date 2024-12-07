@@ -29,7 +29,7 @@ const RegisterPage = () => {
 
         try {
             // Enviar datos al backend con axios
-            const response = await axios.post('http://localhost:3000', {
+            const response = await axios.post('http://localhost:8080/graphql', {
                 query: `
                     mutation {
                         registerUsuario(

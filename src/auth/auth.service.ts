@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
+import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -64,4 +66,21 @@ export class AuthService {
       email: user.email,
     };
   }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const user = await this.prisma.usuario.findUnique({
+      where: { email: resetPasswordDto.email },
+    });
+    if (!user) {
+      throw new ConflictException('Usuario no encontrado');
+    }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(resetPasswordDto.newPassword, saltRounds);
+    await this.prisma.usuario.update({
+      where: { email: resetPasswordDto.email },
+      data: { password: hashedPassword },
+    });
+    return { message: 'Contraseña actualizada exitosamente' };
+  }
+
 }

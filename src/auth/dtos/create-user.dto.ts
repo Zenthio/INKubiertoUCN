@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { IsString, IsNotEmpty, IsAlphanumeric, Length, IsEmail } from 'class-validator';
 
 export class CreateUserDto {

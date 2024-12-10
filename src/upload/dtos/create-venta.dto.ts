@@ -3,8 +3,9 @@ import { Type } from 'class-transformer';
 import { CreateAdicionDto } from './create-adicion.dto';
 import { CreatePagoDto } from './create-pago.dto';
 export class CreateVentaDto {
+  
   @IsInt()
-  idV: number;
+  idv: number;
 
   @IsDate()
   @Type(() => Date)

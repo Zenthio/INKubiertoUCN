@@ -99,8 +99,8 @@ export class ExcelService {
     mediopago: rowP.getCell(3).value as string,
     monto: Number(rowP.getCell(4).value),
     caja: rowP.getCell(5).value as string,
-    sala: rowP.getCell(9).value ? (rowP.getCell(9).value as string) : null,
-    mesa: rowP.getCell(10).value ? (rowP.getCell(10).value as number) : null,
+    sala: rowP.getCell(9).value ? (rowP.getCell(9).value as string) : "sin sala",
+    mesa: rowP.getCell(10).value ? (rowP.getCell(10).value as number) : 0,
     cancelado: rowP.getCell(11).value as string,
   };
   await this.prisma.pago.create({

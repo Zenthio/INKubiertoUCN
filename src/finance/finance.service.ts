@@ -50,27 +50,33 @@ export class FinanceService {
       }
 
 
-  async obtenerDatos(): Promise<Producto[]> {
+      async getProducts(): Promise<{ NOMBRE: string, CANTIDAD: number ,VENTAS: number }[]> {
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth(); // Meses en JavaScript van de 0 a 11
+        const firstDayOfMonth = new Date(Date.UTC(currentYear, currentMonth, 1, 0, 0, 0));
+        const firstDayOfNextMonth = new Date(Date.UTC(currentYear, currentMonth + 1, 1, 0, 0, 0));
     
-    try{
-    const result=await this.prisma.adicion.groupBy({
-      by:['producto'],
-      _sum:{
-          cantidad:true,
-          precio:true,
-      },
-    });
-    return result.map((item)=>({
-      NOMBRE:item.producto,
-      CANTIDAD:item._sum.cantidad||0,
-      VENTAS:item._sum.precio||0,
-    }));
-    }
-    catch(error){
-      throw new Error(`Error al obtener datos agrupados:${error.message}`);
- 
-    }
-
-}
+        const products = await this.prisma.adicion.groupBy({
+          by: ['producto'],
+          _sum: {
+            precio: true,
+            cantidad: true,
+          },
+          where: {
+            fechapago: {
+              gte: firstDayOfMonth,
+              lt: firstDayOfNextMonth,
+            },
+          },
+        });
+    
+        return products.map(product => ({
+          NOMBRE: product.producto || 'sin producto',
+          CANTIDAD: product._sum.cantidad || 0,
+          VENTAS: product._sum.precio,
+        }));
+      }catch (error){
+        throw new Error(`Error al obtener datos agrupados: ${error.message}`)
+      }
 }
 

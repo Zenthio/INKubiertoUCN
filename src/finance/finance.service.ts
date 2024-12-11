@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Producto } from './interfaceProducto';
+
 
 @Injectable()
 export class FinanceService {
@@ -46,4 +48,29 @@ export class FinanceService {
       console.log("Total gastos sumados:", result._sum.monto || 0); 
       return { total: -(result._sum.monto || 0) }; // Devuelve el total negativo para representar los gastos 
       }
+
+
+  async obtenerDatos(): Promise<Producto[]> {
+    
+    try{
+    const result=await this.prisma.adicion.groupBy({
+      by:['producto'],
+      _sum:{
+          cantidad:true,
+          precio:true,
+      },
+    });
+    return result.map((item)=>({
+      NOMBRE:item.producto,
+      CANTIDAD:item._sum.cantidad||0,
+      VENTAS:item._sum.precio||0,
+    }));
+    }
+    catch(error){
+      throw new Error(`Error al obtener datos agrupados:${error.message}`);
+ 
+    }
+
 }
+}
+

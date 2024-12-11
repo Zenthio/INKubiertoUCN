@@ -13,7 +13,6 @@ CREATE TABLE "adicion" (
     "creadopor" VARCHAR(255) NOT NULL,
     "cocina" VARCHAR(255) NOT NULL,
     "cancelada" VARCHAR(255),
-    "activo" BOOLEAN DEFAULT true,
 
     CONSTRAINT "adicion_pkey" PRIMARY KEY ("id")
 );
@@ -25,8 +24,6 @@ CREATE TABLE "gasto" (
     "giromes" VARCHAR(255) NOT NULL,
     "item" VARCHAR(255) NOT NULL,
     "monto" INTEGER NOT NULL,
-    "archivoid" VARCHAR(255) NOT NULL,
-    "fechacarga" TIMESTAMP(6) NOT NULL,
 
     CONSTRAINT "gasto_pkey" PRIMARY KEY ("id")
 );
@@ -42,7 +39,6 @@ CREATE TABLE "pago" (
     "sala" VARCHAR(255),
     "mesa" INTEGER,
     "cancelado" VARCHAR(255),
-    "activo" BOOLEAN DEFAULT true,
 
     CONSTRAINT "pago_pkey" PRIMARY KEY ("id")
 );
@@ -60,7 +56,8 @@ CREATE TABLE "usuario" (
 
 -- CreateTable
 CREATE TABLE "venta" (
-    "idv" SERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
+    "idv" INTEGER NOT NULL,
     "fecha" TIMESTAMP(6) NOT NULL,
     "creacion" TIMESTAMP(6) NOT NULL,
     "cerrada" TIMESTAMP(6) NOT NULL,
@@ -72,11 +69,8 @@ CREATE TABLE "venta" (
     "mediopago" VARCHAR(255),
     "total" REAL NOT NULL,
     "tipoventa" VARCHAR(255) NOT NULL,
-    "archivoid" VARCHAR(255) NOT NULL,
-    "fechacarga" TIMESTAMP(6) NOT NULL,
-    "activo" BOOLEAN DEFAULT true,
 
-    CONSTRAINT "venta_pkey" PRIMARY KEY ("idv")
+    CONSTRAINT "venta_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -86,4 +80,4 @@ CREATE UNIQUE INDEX "usuario_username_key" ON "usuario"("username");
 CREATE UNIQUE INDEX "usuario_email_key" ON "usuario"("email");
 
 -- AddForeignKey
-ALTER TABLE "adicion" ADD CONSTRAINT "fk_venta" FOREIGN KEY ("idventa") REFERENCES "venta"("idv") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "adicion" ADD CONSTRAINT "fk_venta" FOREIGN KEY ("idventa") REFERENCES "venta"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

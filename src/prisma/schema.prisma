@@ -52,7 +52,7 @@ model usuario {
   createdat DateTime? @default(now()) @db.Timestamp(6)
 }
 
-model venta {
+model venta {    
   idv        Int       @id @default(autoincrement())
   fecha      DateTime  @db.Timestamp(6)
   creacion   DateTime  @db.Timestamp(6)

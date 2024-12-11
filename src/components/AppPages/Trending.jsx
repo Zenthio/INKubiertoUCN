@@ -22,7 +22,7 @@ import {
 
 const TrendingPage = ()=>{
     return(
-        <div>
+        <div className='body'>
         <Tabs
             textColor="secondary"
             indicatorColor="primary"

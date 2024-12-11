@@ -17,7 +17,7 @@ import {
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
+import './GeneralPage.css';
 const monthlyData = [
     { month: 'Ene', earnings: 1200 },
     { month: 'Feb', earnings: 2100 },
@@ -44,17 +44,18 @@ const FinancePage = () => {
     };
 
   // Manejador para la carga de archivo (solo parte visual)
-  const handleFileUpload = (event) => {
+  {/*const handleFileUpload = (event) => {
     const file = event.target.files[0];
     console.log("Archivo cargado:", file);
     // Aquí se puede agregar la lógica para procesar el archivo más adelante
   };
+  */}
 
     const data = view === 'monthly' ? monthlyData : weeklyData;
     const xAxisKey = view === 'monthly' ? 'month' : 'week';
 
     return (
-        <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', paddingTop: 20 }}>
+        <div  style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', paddingTop: 0 }}>
             <Tabs
                 textColor="secondary"
                 indicatorColor="primary"
@@ -62,6 +63,7 @@ const FinancePage = () => {
                 centered
                 sx={{
                     backgroundColor: "#393838",
+                    marginTop:0,
                     '& .MuiTab-root': {
                         minWidth: 'auto',
                         paddingX: 4,
@@ -74,15 +76,16 @@ const FinancePage = () => {
                 <Tab value="one" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
                 <Tab value="two" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
                 <Tab value="three" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
+                <Tab value="three" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
+
             </Tabs>
 
             <Container maxWidth="md" sx={{ marginTop: 4 }}>
                 <Typography variant="h4" align="center" gutterBottom>
                     Resumen de Finanzas
                 </Typography>
-
                 <Grid container spacing={4}>
-                  {/* Sección para subir archivo Excel */}
+                 {/*
                   <Grid item xs={12}>
                       <Card>
                           <CardContent>
@@ -102,6 +105,7 @@ const FinancePage = () => {
                           </CardContent>
                       </Card>
                   </Grid>
+                  */}
 
                     <Grid item xs={12} md={6}>
                         <Card>

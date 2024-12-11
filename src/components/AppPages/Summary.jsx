@@ -100,7 +100,7 @@ const SummaryPage = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh", paddingTop: 20 }}>
+    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
       <Tabs
         textColor="secondary"
         indicatorColor="primary"
@@ -120,6 +120,8 @@ const SummaryPage = () => {
         <Tab value="one" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
         <Tab value="two" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
         <Tab value="three" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
+        <Tab value="three" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
+
       </Tabs>
 
       <Container maxWidth="sm" sx={{ marginTop: 4 }}>

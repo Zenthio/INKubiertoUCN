@@ -55,6 +55,7 @@ const Layout = () => {
         <MenuIcon />
       </IconButton>
       <Button sx={{color:"white"}}>
+    
         <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, color:"white",textDecoration:"none"}}>
            INKUBIERTOS
         </Typography>

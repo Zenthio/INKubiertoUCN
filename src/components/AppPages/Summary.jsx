@@ -8,6 +8,8 @@ import {
   Container,
   Box,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
@@ -16,9 +18,15 @@ import axios from "axios";
 const SummaryPage = () => {
   const [selectedFileVentas, setSelectedFileVentas] = useState(null);
   const [selectedFileGastos, setSelectedFileGastos] = useState(null);
-  const [ingresosTotales, setIngresosTotales] = useState(0);
-  const [gastosTotales, setGastosTotales] = useState(0);
-  const [balanceActual, setBalanceActual] = useState(0);
+  const [ingresosConIVA, setIngresosConIVA] = useState(0);
+  const [ingresosSinIVA, setIngresosSinIVA] = useState(0);
+  const [gastosConIVA, setGastosConIVA] = useState(0);
+  const [gastosSinIVA, setGastosSinIVA] = useState(0);
+  const [balanceActualConIVA, setBalanceActualConIVA] = useState(0);
+  const [balanceActualSinIVA, setBalanceActualSinIVA] = useState(0);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   // Manejador para la carga de archivo de ventas
   const handleFileUploadVentas = (event) => {
@@ -45,8 +53,14 @@ const SummaryPage = () => {
           }
         );
         console.log("Respuesta del servidor (ventas):", response.data);
+        setSnackbarMessage("Archivo de ventas cargado exitosamente");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
       } catch (error) {
         console.error("Error al enviar el archivo de ventas:", error);
+        setSnackbarMessage("Error al cargar el archivo de ventas");
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
       }
     }
   };
@@ -66,8 +80,14 @@ const SummaryPage = () => {
           }
         );
         console.log("Respuesta del servidor (gastos):", response.data);
+        setSnackbarMessage("Archivo de gastos cargado exitosamente");
+        setSnackbarSeverity("success");
+        setOpenSnackbar(true);
       } catch (error) {
         console.error("Error al enviar el archivo de gastos:", error);
+        setSnackbarMessage("Error al cargar el archivo de gastos");
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
       }
     }
   };
@@ -76,31 +96,35 @@ const SummaryPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ingresosResponse = await axios.get(
-          "http://localhost:3001/finanzas/ventas/totales"
-        );
-        const gastosResponse = await axios.get(
-          "http://localhost:3001/finanzas/gastos/totales"
-        );
+        const ingresosConIVAResponse = await axios.get("http://localhost:3001/finanzas/ventas/totalesConIVA");
+        const gastosConIVAResponse = await axios.get("http://localhost:3001/finanzas/gastos/totalesConIVA");
+  
+        const totalIngresosConIVA = ingresosConIVAResponse.data.total || 0;
+        const totalIngresosSinIVA = Math.abs(totalIngresosConIVA/1.19);
+        const totalGastosConIVA = Math.abs(gastosConIVAResponse.data.total) || 0;
+        const totalGastosSinIVA = Math.abs(totalGastosConIVA/1.19);
 
-        // Convertimos montos negativos a positivos y calculamos totales
-        const totalIngresos = ingresosResponse.data.total || 0;
-        const totalGastos =
-          Math.abs(gastosResponse.data.total) || 0; // Aseguramos que sean positivos
-
-        setIngresosTotales(totalIngresos);
-        setGastosTotales(totalGastos);
-        setBalanceActual(totalIngresos - totalGastos);
+        setIngresosConIVA(totalIngresosConIVA);
+        setIngresosSinIVA(totalIngresosSinIVA);
+        setGastosConIVA(totalGastosConIVA);
+        setGastosSinIVA(totalGastosSinIVA);
+        setBalanceActualConIVA(totalIngresosConIVA - totalGastosConIVA);
+        setBalanceActualSinIVA(totalIngresosSinIVA - totalGastosSinIVA); // Puedes ajustar el balance actual según tu preferencia
       } catch (error) {
         console.error("Error al obtener datos financieros:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh", paddingTop: 20 }}>
       <Tabs
         textColor="secondary"
         indicatorColor="primary"
@@ -117,11 +141,10 @@ const SummaryPage = () => {
           },
         }}
       >
-        <Tab value="one" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
-        <Tab value="two" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
-        <Tab value="three" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
-        <Tab value="three" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
-
+        <Tab value="one" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
+        <Tab value="two" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
+        <Tab value="three" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
+        <Tab value="four" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
       </Tabs>
 
       <Container maxWidth="sm" sx={{ marginTop: 4 }}>
@@ -130,8 +153,8 @@ const SummaryPage = () => {
         </Typography>
 
         <Grid container spacing={4}>
-          {/* Sección para subir archivos */}
-          <Grid item xs={12}>
+          {/* Subir Archivo Ventas */}
+          <Grid item xs={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -155,7 +178,8 @@ const SummaryPage = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12}>
+          {/* Subir Archivo Gastos */}
+          <Grid item xs={6}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -179,44 +203,92 @@ const SummaryPage = () => {
             </Card>
           </Grid>
 
-          {/* Balance General */}
+          {/* Balance General con IVA */}
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                <Typography variant="h6">Balance Actual</Typography>
+                <Typography variant="h6">Balance Actual (Con IVA)</Typography>
                 <Typography variant="h4" color="primary">
-                  ${balanceActual.toLocaleString()}
+                  ${balanceActualConIVA.toLocaleString()}
                 </Typography>
-                <Typography color="textSecondary">Después de gastos e ingresos</Typography>
+                <Typography color="textSecondary">Después de gastos e ingresos (con IVA)</Typography>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Ingresos Totales */}
+          {/* Balance General sin IVA */}
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Balance Actual (Sin IVA)</Typography>
+                <Typography variant="h4" color="primary">
+                  ${balanceActualSinIVA.toLocaleString()}
+                </Typography>
+                <Typography color="textSecondary">Después de gastos e ingresos (sin IVA)</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Ingresos Totales con IVA */}
           <Grid item xs={6}>
             <Card>
               <CardContent>
-                <Typography variant="h6">Ingresos Totales</Typography>
+                <Typography variant="h6">Ingresos Totales (Con IVA)</Typography>
                 <Typography variant="h5" color="primary">
-                  ${ingresosTotales.toLocaleString()}
+                  ${ingresosConIVA.toLocaleString()}
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
 
-          {/* Gastos Totales */}
+          {/* Ingresos Totales sin IVA */}
           <Grid item xs={6}>
             <Card>
               <CardContent>
-                <Typography variant="h6">Gastos Totales</Typography>
+                <Typography variant="h6">Ingresos Totales (Sin IVA)</Typography>
+                <Typography variant="h5" color="primary">
+                  ${ingresosSinIVA.toLocaleString()}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Gastos Totales con IVA */}
+          <Grid item xs={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Gastos Totales (Con IVA)</Typography>
                 <Typography variant="h5" color="secondary">
-                  ${gastosTotales.toLocaleString()}
+                  ${gastosConIVA.toLocaleString()}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Gastos Totales sin IVA */}
+          <Grid item xs={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Gastos Totales (Sin IVA)</Typography>
+                <Typography variant="h5" color="secondary">
+                  ${gastosSinIVA.toLocaleString()}
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
       </Container>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Posición centrada
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

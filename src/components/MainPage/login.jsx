@@ -30,7 +30,7 @@ const Login = () => {
                 // Guardar el token en localStorage para mantener la sesión
                 localStorage.setItem('token', token);
                 localStorage.setItem('email', email);
-                navigate('/finance'); // Redirigir al home después del login exitoso
+                navigate('/summary'); // Redirigir al home después del login exitoso
             } else {
                 setError('Credenciales inválidas');
             }

@@ -54,10 +54,10 @@ import {
             },
           }}
         >
-          <Tab value="one" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
-          <Tab value="two" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
-          <Tab value="three" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
-          <Tab value="three" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
+          <Tab value="one" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
+          <Tab value="two" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
+          <Tab value="three" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
+          <Tab value="four" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
 
           
         </Tabs>

@@ -66,10 +66,12 @@ const GraphicsPage = () => {
                   },
               }}
           >
-              <Tab value="one" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
-              <Tab value="two" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
-              <Tab value="three" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
-              <Tab value="four" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
+                <Tab value="one" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
+                <Tab value="two" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
+                <Tab value="three" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
+                <Tab value="four" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
+                <Tab value="five" label="Medios de pago" component={Link} to="/paymethod" sx={{ color: "white" }} />
+                <Tab value="six" label="Comparacion" component={Link} to="/comparation" sx={{ color: "white" }} />
           </Tabs>
 
           <Container maxWidth="md" sx={{ marginTop: 4 }}>

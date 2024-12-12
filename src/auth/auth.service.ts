@@ -3,9 +3,12 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
+//import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
 import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import { MailerService } from '@nestjs-modules/mailer';
+
 
 @Injectable()
 export class AuthService {
@@ -13,6 +16,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -20,6 +24,7 @@ export class AuthService {
       where: { email },
       select: { id: true, username: true, password: true },
     });
+    
     if (!user) {
         throw new UnauthorizedException('Invalid credentials');
     }
@@ -32,7 +37,6 @@ export class AuthService {
 
     return user;
   }
-
   
   async login(user: { username: string; id: string }) {
     const payload = { username: user.username, sub: user.id };
@@ -41,6 +45,9 @@ export class AuthService {
       token: this.jwtService.sign(payload),
     };
   }
+
+  /*
+
   async register(createUserDto: CreateUserDto) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltRounds);
@@ -67,19 +74,74 @@ export class AuthService {
     };
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+  */
+
+  async requestResetPassword(email: string) {
+
     const user = await this.prisma.usuario.findUnique({
-      where: { email: resetPasswordDto.email },
+      where: { email },
+    });
+
+    if (!user) {
+      throw new ConflictException('Usuario no encontrado');
+    }
+
+    const token = uuidv4();
+    await this.prisma.passwordResetToken.create({
+      data: {
+        email,
+        token,
+        createdAt: new Date(),
+      },
+    });
+
+    const resetLink = `http://your-frontend-url/reset-password?token=${token}`; //Falta cambiarlo a localhost:Elpuerto
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Restablecimiento de contraseña',
+      template: './reset-password', // The template file name
+      context: {
+        name: user.username,
+        resetLink,
+      },
+    });
+
+    return { message: 'Correo de confirmación enviado' };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const tokenRecord = await this.prisma.passwordResetToken.findUnique({
+      where: { token: resetPasswordDto.token },
+    });
+
+    if (!tokenRecord) {
+      throw new ConflictException('Token inválido o expirado');
+    }
+
+    const tokenAge = (new Date().getTime() - new Date(tokenRecord.createdAt).getTime()) / 1000;
+    if (tokenAge > 3600) { // 1 hour in seconds
+      throw new ConflictException('Token expirado');
+    }
+  
+    const user = await this.prisma.usuario.findUnique({
+      where: { email: tokenRecord.email },
     });
     if (!user) {
       throw new ConflictException('Usuario no encontrado');
     }
+  
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(resetPasswordDto.newPassword, saltRounds);
     await this.prisma.usuario.update({
-      where: { email: resetPasswordDto.email },
+      where: { email: tokenRecord.email },
       data: { password: hashedPassword },
     });
+  
+    await this.prisma.passwordResetToken.delete({
+      where: { token: resetPasswordDto.token },
+    });
+  
     return { message: 'Contraseña actualizada exitosamente' };
   }
 

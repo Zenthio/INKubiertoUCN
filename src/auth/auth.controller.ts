@@ -20,9 +20,16 @@ export class AuthController {
     
   }
   
+  /*
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
+  }
+  */
+
+  @Post('request-reset-password')
+  async requestResetPassword(@Body('email') email: string) {
+    return this.authService.requestResetPassword(email);
   }
 
   @Post('reset-password')

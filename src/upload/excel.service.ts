@@ -115,13 +115,6 @@ async readExcelFileP(fileBuffer: Buffer): Promise<void> {
   const gastosSheet = workbook.worksheets[0];
 
 
-  // **Eliminar los registros anteriores de la tabla de gastos**
-  await this.prisma.gasto.deleteMany({
-    where: {}, // Esto elimina todos los registros de la tabla
-  });
-
-  console.log("Registros antiguos eliminados correctamente.");
-
   // Procesar los nuevos datos de gastos desde el archivo Excel
   for (let rowNumberG = 4; rowNumberG <= gastosSheet.rowCount; rowNumberG++) {
     const rowG = gastosSheet.getRow(rowNumberG);

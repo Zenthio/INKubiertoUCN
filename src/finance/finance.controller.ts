@@ -6,17 +6,18 @@ import { Producto } from './interfaceProducto';
 export class FinanceController {
   constructor(private readonly financeService: FinanceService) {}
 
-  @Get('/ventas/totales')
+  @Get('/ventas/totalesConIVA')
   async getTotalVentas() {
     return this.financeService.getTotalVentas();
   }
 
-  @Get('/gastos/totales')
+  @Get('/gastos/totalesConIVA')
   async getTotalGastos() {
     return this.financeService.getTotalGastos();
   }
+
   @Get('/ventas/producto')
-  async getTotalProducto():Promise<Producto[]>{
-    return this.financeService.obtenerDatos();
+  async getProducts():Promise<Producto[]>{
+    return this.financeService.getProducts();
   }
 }

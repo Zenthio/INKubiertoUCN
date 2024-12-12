@@ -6,9 +6,12 @@ import { ExcelModule } from './upload/excel.module';
 import { FinanceModule } from './finance/finance.module';
 import { PrismaService } from './prisma/prisma.service';
 import { RoomsModule } from './graphics/rooms.module';
+import { GraficoFModule } from './graficoF/graficoF.module';
+import { GraficoGModule } from './graficoG/graficoG.module';
+import { TablesModule } from './mesas/tables.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, ExcelModule, FinanceModule, RoomsModule],
+  imports: [AuthModule, UsersModule, PrismaModule, ExcelModule, FinanceModule, RoomsModule, GraficoFModule, GraficoGModule, TablesModule],
   controllers: [],
   providers: [PrismaService],
 })

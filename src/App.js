@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/MainPage/login';
+import RequestResetPass from './components/MainPage/RequestResetPass';
 import MainPage from './components/MainPage/MainPage';
 import RegisterPage from './components/MainPage/RegisterPage';
 import FinancePage from './components/AppPages/Finance';
@@ -20,11 +21,9 @@ const App = () => {
     <Router>
       <Routes>
         
-        <Route index element={<Login />} />
-        
-
-        
+        <Route index element={<Login />} />  
         <Route path="/" element={<Layout />}>
+          <Route path="request-reset-password" element={<RequestResetPass />} />
           <Route path="finance" element={<FinancePage />} />
           <Route path="graphics" element={<GraphicsPage />} />
           <Route path="inventory" element={<InventoryPage />} />

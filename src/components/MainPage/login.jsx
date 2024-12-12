@@ -67,13 +67,15 @@ const Login = () => {
                             placeholder="Password"
                             required
                         />
-                        <a href="#" className="forgot-password">¿Olvidaste tu contraseña?</a>
                     </div>
                     {error && <p className="error">{error}</p>}
                     <button type="submit" className="auth-button" disabled={loading}>
                         {loading ? 'Cargando...' : 'Iniciar Sesión'}
                     </button>
                 </form>
+                <button onClick={() => navigate('/request-reset-password')}>
+                ¿Olvidaste tu contraseña?
+                </button>
             </div>
         </div>
     );

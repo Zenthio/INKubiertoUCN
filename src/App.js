@@ -19,11 +19,11 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Rutas sin barra de tareas /}
+        
         <Route index element={<Login />} />
-        {/<Route path="/register" element={<RegisterPage />} />/}
+        
 
-        {/ Rutas con barra de tareas */}
+        
         <Route path="/" element={<Layout />}>
           <Route path="finance" element={<FinancePage />} />
           <Route path="graphics" element={<GraphicsPage />} />

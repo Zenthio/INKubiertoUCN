@@ -23,26 +23,6 @@ import {
 const TrendingPage = ()=>{
     return(
         <div className='body'>
-        <Tabs
-            textColor="secondary"
-            indicatorColor="primary"
-            aria-label="secondary tabs example"
-            centered
-            sx={{backgroundColor:"#393838",
-                 '& .MuiTab-root': {
-                 minWidth: 'auto',
-                 paddingX: 4,
-                fontWeight: 500,
-                fontFamily: 'Arial, sans-serif',
-                '&:hover': { color: '#9b9b9b' },
-          },
-        }}
-      >
-        <Tab value="one" label="Resumen" component={Link} to="/summary" sx={{ color: "white" }} />
-        <Tab value="two" label="Finanzas" component={Link} to="/finance" sx={{ color: "white" }} />
-        <Tab value="three" label="Gráficos" component={Link} to="/graphics" sx={{ color: "white" }} />
-        <Tab value="four" label="Productos" component={Link} to="/inventory" sx={{ color: "white" }} />
-    </Tabs>      
         <Typography>
             TENDENCIAS
         </Typography>

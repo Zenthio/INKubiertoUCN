@@ -8,6 +8,8 @@ import {
   Container,
   Box,
   Button,
+  CircularProgress,
+  LinearProgress,
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -27,6 +29,10 @@ const SummaryPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [loadingVentas, setLoadingVentas] = useState(false); 
+  const [loadingGastos, setLoadingGastos] = useState(false); 
+  const [progressVentas, setProgressVentas] = useState(0); 
+  const [progressGastos, setProgressGastos] = useState(0);
 
   // Manejador para la carga de archivo de ventas
   const handleFileUploadVentas = (event) => {
@@ -39,59 +45,68 @@ const SummaryPage = () => {
   };
 
   // Función para enviar archivo de ventas
-  const handleSubmitVentas = async () => {
-    if (selectedFileVentas) {
-      const formData = new FormData();
-      formData.append("file", selectedFileVentas);
-
-      try {
-        const response = await axios.post(
-          "http://localhost:3001/excel/upload-ventas",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        console.log("Respuesta del servidor (ventas):", response.data);
-        setSnackbarMessage("Archivo de ventas cargado exitosamente");
-        setSnackbarSeverity("success");
-        setOpenSnackbar(true);
-      } catch (error) {
-        console.error("Error al enviar el archivo de ventas:", error);
-        setSnackbarMessage("Error al cargar el archivo de ventas");
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
-
-      }
-    }
-  };
+  const handleSubmitVentas = async () => { 
+    if (selectedFileVentas) { 
+      const formData = new FormData(); 
+      formData.append("file", selectedFileVentas); 
+      setLoadingVentas(true); 
+      setProgressVentas(0); 
+      try { 
+        const response = await axios.post( "http://localhost:3001/excel/upload-ventas", 
+         formData, 
+         { 
+          headers: { "Content-Type": "multipart/form-data" }, 
+          onUploadProgress: (progressEvent) => { 
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total); 
+            setProgressVentas(percentCompleted); 
+          } 
+        } 
+      ); 
+      console.log("Respuesta del servidor (ventas):", response.data); 
+      setSnackbarMessage("Archivo de ventas cargado exitosamente"); 
+      setSnackbarSeverity("success"); setOpenSnackbar(true); 
+    } catch (error) { 
+      console.error("Error al enviar el archivo de ventas:", error); 
+      setSnackbarMessage("Error al cargar el archivo de ventas"); 
+      setSnackbarSeverity("error"); 
+      setOpenSnackbar(true); 
+    } finally { 
+      setLoadingVentas(false); 
+    } 
+  } 
+};
 
   // Función para enviar archivo de gastos
-  const handleSubmitGastos = async () => {
-    if (selectedFileGastos) {
-      const formData = new FormData();
-      formData.append("file", selectedFileGastos);
+  const handleSubmitGastos = async () => { 
+    if (selectedFileGastos) { 
+      const formData = new FormData(); 
+      formData.append("file", selectedFileGastos); 
+      setLoadingGastos(true); 
+      setProgressGastos(0); 
+      try { 
+        const response = await axios.post( "http://localhost:3001/excel/upload-gastos", 
+         formData, 
+         { 
+          headers: { "Content-Type": "multipart/form-data" }, 
+          onUploadProgress: (progressEvent) => { 
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total); 
+            setProgressGastos(percentCompleted); 
+          } 
+        } 
+      ); 
+      console.log("Respuesta del servidor (gastos):", response.data); 
+      setSnackbarMessage("Archivo de gastos cargado exitosamente"); 
+      setSnackbarSeverity("success"); setOpenSnackbar(true); 
+    } catch (error) { 
+      console.error("Error al enviar el archivo de gastos:", error); 
+      setSnackbarMessage("Error al cargar el archivo de gastos"); 
+      setSnackbarSeverity("error"); 
+      setOpenSnackbar(true); 
+    } finally { setLoadingGastos(false); 
 
-      try {
-        const response = await axios.post(
-          "http://localhost:3001/excel/upload-gastos",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        console.log("Respuesta del servidor (gastos):", response.data);
-        setSnackbarMessage("Archivo de gastos cargado exitosamente");
-        setSnackbarSeverity("success");
-        setOpenSnackbar(true);
-      } catch (error) {
-        console.error("Error al enviar el archivo de gastos:", error);
-        setSnackbarMessage("Error al cargar el archivo de gastos");
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
-      }
-    }
-  };
+    } 
+  } 
+};
 
   // Obtener datos de ingresos y gastos del backend
   useEffect(() => {
@@ -125,11 +140,27 @@ const SummaryPage = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh"}}>
-      
+    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh", paddingTop: 20 }}>
+      <Tabs
+        textColor="secondary"
+        indicatorColor="primary"
+        aria-label="secondary tabs example"
+        centered
+        sx={{
+          backgroundColor: "#393838",
+          "& .MuiTab-root": {
+            minWidth: "auto",
+            paddingX: 4,
+            fontWeight: 500,
+            fontFamily: "Arial, sans-serif",
+            "&:hover": { color: "#9b9b9b" },
+          },
+        }}
+      >
+      </Tabs>
 
-      <Container maxWidth="sm" >
-        <Typography variant="h4" align="center" gutterBottom marginTop={3}>
+      <Container maxWidth="sm" sx={{ marginTop: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
           Resumen Financiero
         </Typography>
 
@@ -153,10 +184,10 @@ const SummaryPage = () => {
                   onClick={handleSubmitVentas}
                   sx={{ marginTop: 2 }}
                 >
-                  Subir Archivo de Ventas
-                </Button>
-              </CardContent>
-            </Card>
+                  {loadingVentas ? <CircularProgress size={24} /> : 'Subir Archivo de Ventas'} 
+                  </Button> {loadingVentas && <LinearProgress variant="determinate" value={progressVentas} sx={{ marginTop: 2 }} />} 
+              </CardContent> 
+            </Card> 
           </Grid>
 
           {/* Subir Archivo Gastos */}
@@ -178,10 +209,10 @@ const SummaryPage = () => {
                   onClick={handleSubmitGastos}
                   sx={{ marginTop: 2 }}
                 >
-                  Subir Archivo de Gastos
-                </Button>
-              </CardContent>
-            </Card>
+                  {loadingGastos ? <CircularProgress size={24} /> : 'Subir Archivo de Gastos'} 
+                  </Button> {loadingGastos && <LinearProgress variant="determinate" value={progressGastos} sx={{ marginTop: 2 }} />} 
+              </CardContent> 
+            </Card> 
           </Grid>
 
           {/* Balance General con IVA */}
@@ -248,7 +279,7 @@ const SummaryPage = () => {
 
           {/* Gastos Totales sin IVA */}
           <Grid item xs={6}>
-            <Card style={{marginBottom:30}}>
+            <Card>
               <CardContent>
                 <Typography variant="h6">Gastos Totales (Sin IVA)</Typography>
                 <Typography variant="h5" color="secondary">

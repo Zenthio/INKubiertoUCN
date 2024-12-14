@@ -1,58 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service'; // Asegúrate de ajustar la ruta a tu servicio Prisma
+import { start } from 'repl';
 
 @Injectable()
 export class ComparationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getComparisonData(months: number[]): Promise<any> {
-    const now = new Date();
-    const data = {};
+  async getComparisonData(month: number): Promise<any> {
+    console.log("GETCOMPARISON CON MES: ",month);
+    let data: { valorIngreso?: number; valorGasto?: number } = {};
 
-    for (const offset of months) {
-      const month = (now.getMonth() - offset + 12) % 12;
-      const year = now.getFullYear() - (now.getMonth() < offset ? 1 : 0);
-
-      const startDate = new Date(year, month, 1);
-      const endDate = new Date(year, month + 1, 1);
-
-      const ingresos = await this.prisma.pago.aggregate({
-        _sum: {
-          monto: true,
+    const currentMonth=month;
+    const currentYear=new Date().getFullYear();
+    const fechaInicio= new Date(Date.UTC(currentYear,month,1));
+    const fechaFinal= new Date(Date.UTC(currentYear,month+1,1));
+    console.log(fechaInicio);
+    console.log(fechaFinal);
+    const ingreso= await this.prisma.venta.aggregate({
+      _sum:{
+        total:true,
+      },
+      where:{
+        fecha:{
+          gte:fechaInicio,
+          lt:fechaFinal,
         },
-        where: {
-          fecha: {
-            gte: startDate,
-            lt: endDate,
-          },
-          monto: {
-            gt: 0,
-          },
+      },
+    });
+    const gasto=await this.prisma.gasto.aggregate({
+      _sum:{
+        monto:true,
+      },
+      where:{
+        fecha:{
+          gte:fechaInicio,
+          lt:fechaFinal,
         },
-      });
-
-      const gastos = await this.prisma.pago.aggregate({
-        _sum: {
-          monto: true,
-        },
-        where: {
-          fecha: {
-            gte: startDate,
-            lt: endDate,
-          },
-          monto: {
-            lt: 0,
-          },
-        },
-      });
-
-      data[month] = {
-        monthName: startDate.toLocaleString('default', { month: 'long' }),
-        ingresos: ingresos._sum.monto || 0,
-        gastos: Math.abs(gastos._sum.monto) || 0,
-      };
-    }
-
-    return data;
-  }
+      },
+    });
+    data.valorIngreso = ingreso._sum.total || 0;  // Si no hay ventas, asignamos 0
+    data.valorGasto = gasto._sum.monto || 0; 
+    console.log(data);
+    return data;  
+}
 }

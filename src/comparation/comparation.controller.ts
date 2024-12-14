@@ -6,8 +6,8 @@ export class ComparationController {
   constructor(private readonly comparationService: ComparationService) {}
 
   @Get('usage')
-  async getComparisonData(@Query('months') months: string) {
-    const parsedMonths = months.split(',').map((month) => parseInt(month, 10));
-    return this.comparationService.getComparisonData(parsedMonths);
+  async getComparisonData(@Query('months') monthString: string) {
+  const month=parseInt(monthString)
+  return this.comparationService.getComparisonData(month);
   }
 }

@@ -10,9 +10,10 @@ import { GraficoFModule } from './graficoF/graficoF.module';
 import { GraficoGModule } from './graficoG/graficoG.module';
 import { TablesModule } from './mesas/tables.module';
 import { PayMethodModule } from './paymethod/paymethod.module';
+import { ComparationModule } from './comparation/comparation.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, ExcelModule, FinanceModule, RoomsModule, GraficoFModule, GraficoGModule, TablesModule, PayMethodModule],
+  imports: [AuthModule, UsersModule, PrismaModule, ExcelModule, FinanceModule, RoomsModule, GraficoFModule, GraficoGModule, TablesModule, PayMethodModule,ComparationModule],
   controllers: [],
   providers: [PrismaService],
 })
